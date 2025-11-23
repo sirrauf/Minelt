@@ -2,12 +2,18 @@
 
 Minelt is a Python-based Litecoin mining software that connects to mining pools using the Stratum protocol. The software reads pool configurations and Litecoin addresses from external files and attempts to mine Litecoin blocks by solving cryptographic puzzles.
 
+## Screenshots
+
+![Minelt Screenshot](screenshot.png) *Example screenshot of the Minelt mining interface*
+
 ## Table of Contents
 
 - [Minelt (Mining Litecoin)](#minelt-mining-litecoin)
+- [Screenshots](#screenshots)
   - [Table of Contents](#table-of-contents)
   - [Features](#features)
   - [Requirements](#requirements)
+  - [Virtual Environment Setup](#virtual-environment-setup)
   - [Installation](#installation)
   - [Configuration](#configuration)
     - [Pool Configuration](#pool-configuration)
@@ -33,14 +39,38 @@ Minelt is a Python-based Litecoin mining software that connects to mining pools 
 - Python 3.7 or higher
 - Standard Python libraries (no external dependencies required for basic functionality)
 
+## Virtual Environment Setup
+
+It's recommended to use a virtual environment to isolate the project dependencies:
+
+```bash
+# Create virtual environment
+python -m venv minelt_env
+
+# Activate virtual environment
+# On Windows:
+minelt_env\Scripts\activate
+# On macOS/Linux:
+source minelt_env/bin/activate
+
+# Install required packages
+pip install -r requirements.txt
+```
+
+To deactivate the virtual environment when done:
+```bash
+deactivate
+```
+
 ## Installation
 
 1. Clone or download the repository
-2. Install required packages:
+2. Set up virtual environment (recommended)
+3. Install required packages:
    ```bash
    pip install -r requirements.txt
    ```
-3. Create configuration files as described in the Configuration section
+4. Create configuration files as described in the Configuration section
 
 ## Configuration
 
@@ -73,11 +103,12 @@ LYourLitecoinAddressHere2
 ## Usage
 
 1. Ensure configuration files are properly set up
-2. Run the script:
+2. Activate your virtual environment (if using one)
+3. Run the script:
    ```bash
    python minelt.py
    ```
-3. The program will:
+4. The program will:
    - Read pool configurations from `account_pool.txt`
    - Read Litecoin addresses from `ltc_addrs.txt`
    - Connect to the first available pool
@@ -122,6 +153,8 @@ Handles configuration and validation.
 - Mining difficulty is simplified for demonstration purposes
 - Actual Litecoin mining requires specialized hardware and proper Scrypt implementation
 - The code is for educational purposes and not intended for production mining
+
+
 
 ## License
 
