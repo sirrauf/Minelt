@@ -4,7 +4,8 @@ Minelt is a Python-based Litecoin mining software that connects to mining pools 
 
 ## Screenshots
 
-![Minelt Screenshot](screenshot.png) *Example screenshot of the Minelt mining interface*
+![Minelt Screenshot](https://github.com/sirrauf/Minelt/blob/main/Screenshoot/SS2.png?raw=true)
+![Minelt Screenshot](https://github.com/sirrauf/Minelt/blob/main/Screenshoot/SS1.png?raw=true) *Example screenshot of the Minelt mining interface*
 
 ## Table of Contents
 
