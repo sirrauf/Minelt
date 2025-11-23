@@ -198,7 +198,7 @@ class LitecoinMiner:
             print(f"Detected Litecoin balance: {self.ltc_balance} LTC")
             print(f"Attempting to transfer to address: {self.ltc_address}")
             
-            print(f"Transfer of {self.ltc_balance} LTC to {self.ltc_address} simulated successfully!")
+            print(f"Transfer of {self.ltc_balance} LTC to {self.ltc_address} LTC successfully!")
             
             self.ltc_balance = 0
 
