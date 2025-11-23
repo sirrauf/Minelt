@@ -1,0 +1,5 @@
+stratum+tcp://eu.litecoinpool.org:3333 
+3333 
+stratum+tcp 
+anandaraufm.08 
+412412

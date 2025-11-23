@@ -1,0 +1,3 @@
+aiojsonrpc2==1.0.0
+aiostratum-proxy==1.1
+PyYAML==3.12
