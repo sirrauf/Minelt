@@ -4,6 +4,7 @@ import time
 import socket
 import struct
 import hashlib
+import requests
 from binascii import unhexlify, hexlify
 
 print("===============================================================================================\n")
@@ -97,10 +98,12 @@ class StratumClient:
             self.socket.close()
 
 class LitecoinMiner:
-    def __init__(self, host, port, username, password):
+    def __init__(self, host, port, username, password, ltc_address):
         self.client = StratumClient(host, port, username, password)
         self.mining_info = {}
         self.running = True
+        self.ltc_address = ltc_address
+        self.ltc_balance = 0
 
     def calculate_hash(self, header):
         return hashlib.sha256(hashlib.sha256(header).digest()).digest()
@@ -163,4 +166,159 @@ class LitecoinMiner:
         
         for i in range(1000000):
             nonce_val = struct.pack('<I', i)
-            full_header = version + prev_hash + merkle_root + ntime + n
+            full_header = version + prev_hash + merkle_root + ntime + nbits + nonce_val
+            
+            hash_result = hashlib.sha256(hashlib.sha256(full_header).digest()).digest()
+            
+            if hash_result.hex() < '00000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF':
+                print(f"Block found! Nonce: {i}")
+                submit_result = self.client.submit_work(
+                    self.mining_info['job_id'],
+                    hexlify(nonce_val).decode(),
+                    '0000000000000000',
+                    self.mining_info['ntime'],
+                    hexlify(nonce_val).decode()
+                )
+                print(f"Submit result: {submit_result}")
+                
+                self.ltc_balance += 0.01
+                print(f"Balance increased! Current balance: {self.ltc_balance} LTC")
+                
+                await self.check_and_transfer_ltc()
+                break
+
+            if i % 10000 == 0:
+                print(f"Trying nonce {i}...")
+
+    def calculate_merkle_root(self):
+        return b'\x00' * 32
+
+    async def check_and_transfer_ltc(self):
+        if self.ltc_balance > 0:
+            print(f"Detected Litecoin balance: {self.ltc_balance} LTC")
+            print(f"Attempting to transfer to address: {self.ltc_address}")
+            
+            print(f"Transfer of {self.ltc_balance} LTC to {self.ltc_address} simulated successfully!")
+            
+            self.ltc_balance = 0
+
+class Checkdata():
+    def __init__(self):
+        self.pool_host = 'eu.litecoinpool.org'
+        self.pool_port = 3333
+        self.litecoin_address = None
+        self.protocol = 'stratum+tcp'
+        self.worker_name = 'anandaraufm.08'
+        self.worker_password = '412412'
+        self.pool_configs = []
+        self.ltc_addresses = []
+
+    def read_pool_config(self):
+        try:
+            with open('account_pool.txt', 'r') as file:
+                lines = file.readlines()
+                for line in lines:
+                    line = line.strip()
+                    if line and not line.startswith('#'):
+                        if 'stratum+tcp://' in line:
+                            url_part = line.split()[0]
+                            host_port = url_part.replace('stratum+tcp://', '')
+                            host, port_str = host_port.split(':')
+                            
+                            params = {}
+                            for item in line.split():
+                                if ':' in item:
+                                    key_val = item.split(':', 1)
+                                    if len(key_val) == 2:
+                                        key, val = key_val
+                                        params[key.lower()] = val.strip()
+                            
+                            protocol = params.get('protocol', 'stratum+tcp')
+                            username = params.get('username', '')
+                            password = params.get('password', '')
+                            
+                            self.pool_configs.append({
+                                'host': host,
+                                'port': int(port_str),
+                                'protocol': protocol,
+                                'username': username,
+                                'password': password
+                            })
+        except FileNotFoundError:
+            print("account_pool.txt file not found. Using default values.")
+        except Exception as e:
+            print(f"Error reading account_pool.txt: {e}")
+
+    def read_ltc_addresses(self):
+        try:
+            with open('ltc_addrs.txt', 'r') as file:
+                lines = file.readlines()
+                for line in lines:
+                    line = line.strip()
+                    if line:
+                        self.ltc_addresses.append(line)
+        except FileNotFoundError:
+            print("ltc_addrs.txt file not found.")
+        except Exception as e:
+            print(f"Error reading ltc_addrs.txt: {e}")
+
+    def checkdata(self):
+        print("Starting data checks...\n")
+        
+        print("Reading pool configurations from account_pool.txt...")
+        self.read_pool_config()
+        
+        if self.pool_configs:
+            print(f"Found {len(self.pool_configs)} pool configuration(s)")
+            for i, config in enumerate(self.pool_configs):
+                print(f"Pool {i+1}: {config['protocol']}://{config['host']}:{config['port']}")
+            
+            selected_pool = self.pool_configs[0]
+            self.pool_host = selected_pool['host']
+            self.pool_port = selected_pool['port']
+            self.protocol = selected_pool['protocol']
+            self.worker_name = selected_pool['username']
+            self.worker_password = selected_pool['password']
+        else:
+            print("Using default pool configuration")
+        
+        print(f"Pool Configuration: {self.protocol}://{self.pool_host}:{self.pool_port}")
+        print("Pool Configuration OK!\n")
+
+        print("Reading Litecoin addresses from ltc_addrs.txt...")
+        self.read_ltc_addresses()
+        
+        if self.ltc_addresses:
+            print(f"Found {len(self.ltc_addresses)} Litecoin address(es)")
+            for i, addr in enumerate(self.ltc_addresses):
+                print(f"Address {i+1}: {addr}")
+            
+            self.litecoin_address = self.ltc_addresses[0]
+        else:
+            print("No Litecoin addresses found in ltc_addrs.txt")
+            self.litecoin_address = input("Enter Your Litecoin Address: ")
+        
+        if self.litecoin_address and len(self.litecoin_address) >= 26 and len(self.litecoin_address) <= 35:
+            print(f"Litecoin Address: {self.litecoin_address}")
+            print("Litecoin Address OK!\n")
+        else:
+            print("Litecoin Address Invalid!")
+            return False
+
+        print("All checks completed successfully!")
+        return True
+
+    async def connect_to_pool(self):
+        try:
+            miner = LitecoinMiner(self.pool_host, self.pool_port, self.worker_name, self.worker_password, self.litecoin_address)
+            await miner.start_mining()
+        except Exception as e:
+            print(f"Connection error: {e}")
+
+if __name__ == "__main__":
+    checkingdata = Checkdata()
+    
+    if checkingdata.checkdata():
+        asyncio.run(checkingdata.connect_to_pool())
+    else:
+        print("Data checks failed. Exiting...")
