@@ -153,7 +153,6 @@ Handles configuration and validation.
 - This implementation uses simplified hashing (SHA256 instead of Scrypt) which is not suitable for actual Litecoin mining
 - Mining difficulty is simplified for demonstration purposes
 - Actual Litecoin mining requires specialized hardware and proper Scrypt implementation
-- The code is for educational purposes and not intended for production mining
 
 
 
