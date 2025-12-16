@@ -1,161 +1,151 @@
-# Minelt (Mining Litecoin)
+---
 
-Minelt is a Python-based Litecoin mining software that connects to mining pools using the Stratum protocol. The software reads pool configurations and Litecoin addresses from external files and attempts to mine Litecoin blocks by solving cryptographic puzzles.
+Minelt - Professional Litecoin Mining Software**Minelt** adalah perangkat lunak penambangan Litecoin (LTC) berbasis Python yang dikembangkan untuk efisiensi dan transparansi. Dibangun dengan algoritma hashing **Scrypt** asli dan protokol **Stratum V1**, Minelt mampu melakukan komunikasi *low-latency* dengan mining pool standar industri seperti `litecoinpool.org`.
+
+Software ini dilengkapi dengan fitur deteksi perangkat keras cerdas (*Hardware Awareness*) yang memonitor spesifikasi CPU dan RAM secara *real-time* untuk memastikan stabilitas selama proses hashing.
+
+---
+
 
 ## Screenshots
 
 ![Minelt Screenshot](https://github.com/sirrauf/Minelt/blob/main/Screenshoot/SS2.png?raw=true)
 ![Minelt Screenshot](https://github.com/sirrauf/Minelt/blob/main/Screenshoot/SS1.png?raw=true) *Example screenshot of the Minelt mining interface*
 
-## Table of Contents
+##📋 Table of Contents (ToC)* [Minelt - Professional Litecoin Mining Software](https://www.google.com/search?q=%23minelt---professional-litecoin-mining-software)
+* [📋 Table of Contents (ToC)](https://www.google.com/search?q=%23-table-of-contents-toc)
+* [✨ Key Features](https://www.google.com/search?q=%23-key-features)
+* [📂 Project Structure](https://www.google.com/search?q=%23-project-structure)
+* [⚙️ Prerequisites](https://www.google.com/search?q=%23%EF%B8%8F-prerequisites)
+* [🚀 Installation](https://www.google.com/search?q=%23-installation)
+* [🔧 Configuration](https://www.google.com/search?q=%23-configuration)
+* [▶️ Usage](https://www.google.com/search?q=%23%EF%B8%8F-usage)
+* [📊 Technical Details](https://www.google.com/search?q=%23-technical-details)
+* [⚠️ Troubleshooting](https://www.google.com/search?q=%23%EF%B8%8F-troubleshooting)
+* [📜 License & Credits](https://www.google.com/search?q=%23-license--credits)
 
-- [Minelt (Mining Litecoin)](#minelt-mining-litecoin)
-- [Screenshots](#screenshots)
-  - [Table of Contents](#table-of-contents)
-  - [Features](#features)
-  - [Requirements](#requirements)
-  - [Virtual Environment Setup](#virtual-environment-setup)
-  - [Installation](#installation)
-  - [Configuration](#configuration)
-    - [Pool Configuration](#pool-configuration)
-    - [Litecoin Addresses](#litecoin-addresses)
-  - [Usage](#usage)
-  - [Architecture](#architecture)
-    - [Classes](#classes)
-    - [Data Flow](#data-flow)
-  - [Limitations](#limitations)
-  - [License](#license)
 
-## Features
 
-- Connects to Litecoin mining pools using the Stratum protocol
-- Reads pool configurations from `account_pool.txt`
-- Reads Litecoin addresses from `ltc_addrs.txt`
-- Implements basic Stratum client functionality
-- Performs simplified mining operations
-- Supports multiple pool configurations with failover
+---
 
-## Requirements
+##✨ Key Features* **Native Scrypt Algorithm:** Menggunakan implementasi C-binding `scrypt` untuk hashing yang valid dan akurat (bukan simulasi SHA256).
+* **Hardware Awareness:** Mendeteksi dan menampilkan spesifikasi detail:
+* CPU Brand & Model (Intel/AMD).
+* Core Counts (Physical & Logical).
+* RAM Usage & Total Capacity.
+* Operating System Details.
 
-- Python 3.7 or higher
-- Standard Python libraries (no external dependencies required for basic functionality)
 
-## Virtual Environment Setup
+* **Stratum V1 Protocol:** Implementasi penuh protokol TCP socket untuk menjaga koneksi stabil dengan pool.
+* **Real-time Statistics:**
+* Kalkulasi Hashrate (kH/s) secara *live*.
+* Monitoring Shares (Accepted, Rejected, Stale).
+* Uptime counter.
 
-It's recommended to use a virtual environment to isolate the project dependencies:
 
+* **Low Resource Overhead:** Kode dioptimalkan untuk berjalan dengan *footprint* memori yang minim.
+
+---
+
+##📂 Project StructureBerikut adalah struktur direktori dari proyek Minelt:
+
+```text
+Minelt-Project/
+│
+├── minelt.py            # Core mining engine (Main Application)
+├── requirements.txt     # Daftar dependensi library Python
+├── account_pool.txt     # Konfigurasi Pool dan User (Optional/Legacy)
+├── ltc_addrs.txt        # Daftar alamat wallet (Optional/Legacy)
+└── README.md            # Dokumentasi Proyek
+
+```
+
+---
+
+##⚙️ PrerequisitesSebelum menjalankan Minelt, pastikan sistem Anda memenuhi persyaratan berikut:
+
+1. **Python 3.8 atau lebih baru**: [Download Python](https://www.python.org/downloads/)
+2. **Microsoft Visual C++ Build Tools (Windows Only)**: Diperlukan untuk mengkompilasi library `scrypt`. [Download Build Tools](https://www.google.com/search?q=https://visualstudio.microsoft.com/visual-cpp-build-tools/).
+3. **Koneksi Internet Stabil**: Wajib untuk protokol Stratum.
+
+---
+
+##🚀 InstallationIkuti langkah-langkah ini untuk menginstal dan menjalankan Minelt:
+
+1. **Ekstrak Project**
+Ekstrak file `.zip` atau `.rar` Minelt ke folder tujuan Anda.
+2. **Buka Terminal / Command Prompt**
+Navigasikan ke folder proyek:
 ```bash
-# Create virtual environment
-python -m venv minelt_env
+cd path/to/Minelt-Project
 
-# Activate virtual environment
-# On Windows:
-minelt_env\Scripts\activate
-# On macOS/Linux:
-source minelt_env/bin/activate
+```
 
-# Install required packages
+
+3. **Install Dependencies**
+Jalankan perintah berikut untuk menginstal library yang dibutuhkan (`scrypt`, `psutil`, `requests`, dll):
+```bash
 pip install -r requirements.txt
+
 ```
 
-To deactivate the virtual environment when done:
+
+*(Catatan: Proses ini mungkin memakan waktu beberapa menit saat mengkompilasi scrypt).*
+
+---
+
+##🔧 ConfigurationKonfigurasi *default* saat ini diatur untuk **litecoinpool.org**. Untuk mengubah pengaturan mining, Anda dapat mengedit variabel di dalam file `minelt.py` pada bagian **Configuration** atau menyesuaikan logika pembacaan file eksternal.
+
+**Default Configuration:**
+
+* **Pool Host:** `eu.litecoinpool.org`
+* **Port:** `3333`
+* **Algorithm:** `Scrypt`
+
+---
+
+##▶️ UsageUntuk memulai proses mining, jalankan perintah berikut di terminal:
+
 ```bash
-deactivate
-```
-
-## Installation
-
-1. Clone or download the repository
-2. Set up virtual environment (recommended)
-3. Install required packages:
-   ```bash
-   pip install -r requirements.txt
-   ```
-4. Create configuration files as described in the Configuration section
-
-## Configuration
-
-### Pool Configuration
-
-Create a file named `account_pool.txt` with the following format:
+python minelt.py
 
 ```
-stratum+tcp://eu.litecoinpool.org:3333 port: 3333 protocol: stratum+tcp username: anandaraufm.08 password: 412412
-stratum+tcp://us.litecoinpool.org:3333 port: 3333 protocol: stratum+tcp username: anandaraufm.08 password: 412412
-stratum+tcp://us2.litecoinpool.org:3333 port: 3333 protocol: stratum+tcp username: anandaraufm.08 password: 412412
-```
 
-Each line contains:
-- Pool URL in stratum+tcp format
-- Port number
-- Protocol type
-- Username for authentication
-- Password for authentication
+**Tampilan Output:**
+Saat berjalan, Minelt akan menampilkan:
 
-### Litecoin Addresses
+1. **Hardware Info:** Detail spesifikasi PC Anda.
+2. **Connection Status:** Log koneksi ke Pool.
+3. **Mining Dashboard:** Baris status yang diperbarui setiap 5 detik berisi Speed (kH/s) dan Share status.
 
-Create a file named `ltc_addrs.txt` containing your Litecoin addresses, one per line:
+Contoh tampilan:
+
+```text
+SPEED: 12.50 kH/s | Uptime: 00:05:20 | Shares: 2/0 | Blocks: 0
 
 ```
-LYourLitecoinAddressHere1
-LYourLitecoinAddressHere2
-```
 
-## Usage
+---
 
-1. Ensure configuration files are properly set up
-2. Activate your virtual environment (if using one)
-3. Run the script:
-   ```bash
-   python minelt.py
-   ```
-4. The program will:
-   - Read pool configurations from `account_pool.txt`
-   - Read Litecoin addresses from `ltc_addrs.txt`
-   - Connect to the first available pool
-   - Subscribe to mining jobs
-   - Attempt to mine blocks
+##📊 Technical Details###Hardware IntegrationMinelt menggunakan library `psutil` dan `py-cpuinfo` untuk mengakses level rendah sistem operasi guna membaca topologi CPU dan manajemen memori. Ini memastikan script tidak membebani sistem di luar batas kapasitas RAM yang tersedia.
 
-## Architecture
+###Network ProtocolMenggunakan `socket` murni Python untuk komunikasi TCP asynchronous. Script menangani pesan JSON-RPC stratum seperti `mining.subscribe`, `mining.authorize`, `mining.notify`, dan `mining.submit`.
 
-### Classes
+---
 
-#### `StratumClient`
-Handles communication with the mining pool using the Stratum protocol.
-- Manages socket connections
-- Sends and receives JSON-RPC messages
-- Handles subscription and authorization
+##⚠️ Troubleshooting**Q: Error `ModuleNotFoundError: No module named 'scrypt'`?**
+A: Library scrypt belum terinstall. Pastikan C++ Build Tools sudah terinstall, lalu jalankan `pip install scrypt`.
 
-#### `LitecoinMiner`
-Implements the mining logic.
-- Receives mining jobs from the pool
-- Attempts to solve the cryptographic puzzle
-- Submits successful solutions to the pool
+**Q: Hashrate muncul tapi tidak ada saldo di Litecoinpool?**
+A: Mining dengan CPU memiliki hashrate yang sangat kecil dibandingkan mesin ASIC. Anda membutuhkan waktu yang sangat lama untuk mendapatkan "Accepted Share" yang valid di difficulty jaringan saat ini. Ini adalah limitasi hardware, bukan kesalahan script.
 
-#### `Checkdata`
-Handles configuration and validation.
-- Reads configuration files
-- Validates pool settings and addresses
-- Manages the mining startup process
+**Q: Script tertutup sendiri (Crash)?**
+A: Cek koneksi internet Anda. Script dirancang untuk berhenti jika koneksi ke pool terputus secara permanen untuk keamanan.
 
-### Data Flow
+---
 
-1. `Checkdata` reads configuration files
-2. Validates pool settings and addresses
-3. Creates `LitecoinMiner` instance with validated data
-4. `LitecoinMiner` connects to the pool via `StratumClient`
-5. Subscribes to mining jobs
-6. Receives jobs and attempts to mine
-7. Submits successful solutions
+##📜 License & Credits**Developed by:** Ananda Rauf Maududi
+**Version:** 2.0.0 (Production Build)
+**License:** Private / Proprietary
 
-## Limitations
-
-- This implementation uses simplified hashing (SHA256 instead of Scrypt) which is not suitable for actual Litecoin mining
-- Mining difficulty is simplified for demonstration purposes
-- Actual Litecoin mining requires specialized hardware and proper Scrypt implementation
-
-
-
-## License
-
-This project is licensed under the Apache 2 License. See the LICENSE file for details.
+*Software ini ditujukan untuk tujuan produksi dan eksperimen teknologi Blockchain.*
