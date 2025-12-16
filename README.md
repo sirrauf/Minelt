@@ -9,8 +9,8 @@ Software ini dilengkapi dengan fitur deteksi perangkat keras cerdas (*Hardware A
 
 ## Screenshots
 
-![Minelt Screenshot](https://github.com/sirrauf/Minelt/blob/main/Screenshoot/SS2.png?raw=true)
-![Minelt Screenshot](https://github.com/sirrauf/Minelt/blob/main/Screenshoot/SS1.png?raw=true) *Example screenshot of the Minelt mining interface*
+![Minelt Screenshot](https://github.com/sirrauf/Minelt/blob/version1/Screenshoot/SS1.png?raw=true)
+![Minelt Screenshot](https://github.com/sirrauf/Minelt/blob/version1/Screenshoot/SS1.png?raw=true) *Example screenshot of the Minelt mining interface*
 
 ##📋 Table of Contents (ToC)* [Minelt - Professional Litecoin Mining Software](https://www.google.com/search?q=%23minelt---professional-litecoin-mining-software)
 * [📋 Table of Contents (ToC)](https://www.google.com/search?q=%23-table-of-contents-toc)
