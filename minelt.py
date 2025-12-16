@@ -258,7 +258,7 @@ class StratumClient:
 
 def print_header():
     print("===============================================================================================")
-    print("   MINELT v2.0 - PROFESSIONAL LITECOIN MINER")
+    print("   MINELT v1.0 - PROFESSIONAL LITECOIN MINER")
     print("   Algorithm: Scrypt | Optimization: CPU Production Grade")
     print("===============================================================================================\n")
 
